@@ -10,4 +10,3 @@ To install:
 The header, footer, course title, and sidebars are removed, leaving only the video player and notes.
 
 ![Preview](preview.png)
-
