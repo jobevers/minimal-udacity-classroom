@@ -9,6 +9,7 @@
 // ==/UserScript==
 // Your code here...
 
+
 // the classroom is a single page app so we need to watch for changes.
 // Doing the removal on hash change isn't good enough because that creates
 // a race condition between the udacity code to add the item and this
@@ -35,6 +36,8 @@ setInterval(function() {
     rightSideBar.hide();
     // make the viewer take up the full width
     $("div[data-ng-controller=viewerPlayer] div.col-xs-9").removeClass("col-xs-9").addClass("col-xs-12");
+    // the height on this element get manually set to 436; resetting to 100%
+    $("div[data-code-mirror-editor]").height("100%");
 }, 500);
 
 
