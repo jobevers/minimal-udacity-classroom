@@ -22,12 +22,39 @@ setInterval(function() {
     // Both of these are necessary to remove the footer
     $("#footer-push").remove();
     $("footer").remove();
-    // The discussions side bar shows up on each node change
-    // even though the parent div gets removed, so we'll
-    // manually remove it
-    $("div[data-viewer-discussions]").parent().remove()
-    // remove the right side bar
-    $("div.col-xs-3[data-ng-controller=programmingQuizPanel]").remove()
+    // remove the right side bar, unless its the result of a quiz
+    // Additionally, the right side bar
+    var rightSideBar = $("div.viewer-player").children().eq(0).children().eq(1);
+    var quizResults = getQuizResults(rightSideBar);
+    if (quizResults) {
+	// should style this better
+	var notes = $("div.viewer-player").children().eq(0).children().eq(0).children().eq(-1);
+	notes.before(quizResults);
+    }
+    // have to hide instead of remove because if we remove we sometimes lose the quiz result information
+    rightSideBar.hide();
     // make the viewer take up the full width
     $("div[data-ng-controller=viewerPlayer] div.col-xs-9").removeClass("col-xs-9").addClass("col-xs-12");
 }, 500);
+
+
+function getQuizResults(rightSideBar) {
+    var resultText = ['Correct!', 'Try again!', 'Error!'];
+    for (var i=0; i < resultText.length; i++) {
+	var text = resultText[i];
+	var quizResult = rightSideBar.find("h3:contains('" + text + "')").parent();
+	if (quizResult.length === 1) {
+	    var isHidden = true;
+	    $.each(quizResult.children(), function(idx, child) {
+		if (!$(child).hasClass('ng-hide')) {
+		    isHidden = false;
+		    // return false to break out of the loop
+		    return false;
+		}
+	    });
+	    if (!isHidden) {
+		return quizResult;
+	    }
+	}
+    }
+}
